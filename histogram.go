@@ -96,8 +96,12 @@ func (h *histogram) StdDev() float64 {
 }
 
 func (h *histogram) Sum() int64 {
-	// HDR can not reproduce sum
-	return 0
+	sum := int64(0)
+	bars := h.hist.Distribution()
+	for _, bar := range bars {
+		sum += (bar.To - bar.From) * bar.Count / 2
+	}
+	return sum
 }
 
 func (h *histogram) Update(v int64) {
